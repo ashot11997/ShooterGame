@@ -29,44 +29,44 @@ public class PlayerController : MonoBehaviour
 	public float Force = 20f;
 
 	private int CurrentWeaponId;
-
-	void FixedUpdate()
-    {
-		Vector2 look = MousePos - Player.position;
-		float rotAngle = Mathf.Atan2(look.y,look.x) * 30f * Mathf.Rad2Deg - 180;
-		Player.rotation = rotAngle;
-    }
 	
     void Update()
     {
 		Vector3 vector = new Vector3(Input.mousePosition.x, Input.mousePosition.y, MyCam.nearClipPlane);
 		MousePos = MyCam.ScreenToWorldPoint(vector);
 
+		Vector2 look = MousePos - Player.position;
+		float rotAngle = Mathf.Atan2(look.y, look.x) * 30f * Mathf.Rad2Deg - 180;
+
 		if (Input.GetButtonDown("Fire1"))
 		{
+			Player.rotation = rotAngle;
+
 			if (CurrentWeaponId == 1)
 			{
-				Shooting();
+				StartCoroutine(Shooting());
 			}
 			else if (CurrentWeaponId == 2)
 			{
-				Shooting2Bullet();
+				StartCoroutine(Shooting2Bullet());
 			}
 			else if (CurrentWeaponId == 3)
 			{
-				Shooting3Bullet();
+				StartCoroutine(Shooting3Bullet());
 			}
 		}
 	}
 
-	void Shooting() {
+	IEnumerator Shooting() {
+		yield return new WaitForSeconds(0.05f);
 		var newBullet = Instantiate(Bullet, Fire1StartPoint.position, Fire1StartPoint.rotation);
 		Rigidbody2D rigidbody = newBullet.GetComponent<Rigidbody2D>();
 		rigidbody.AddForce(Fire1StartPoint.up * Force, ForceMode2D.Impulse);
 	}
 
-	void Shooting2Bullet()
+	IEnumerator Shooting2Bullet()
 	{
+		yield return new WaitForSeconds(0.05f);
 		var newBullet = Instantiate(Bullet, Fire2StartPoint.position, Fire2StartPoint.rotation);
 		Rigidbody2D rigidbody = newBullet.GetComponent<Rigidbody2D>();
 		rigidbody.AddForce(Fire2StartPoint.up * Force, ForceMode2D.Impulse);
@@ -76,8 +76,9 @@ public class PlayerController : MonoBehaviour
 		rigidbody2.AddForce(Fire3StartPoint.up * Force, ForceMode2D.Impulse);
 	}
 
-	void Shooting3Bullet()
+	IEnumerator Shooting3Bullet()
 	{
+		yield return new WaitForSeconds(0.05f);
 		var newBullet = Instantiate(Bullet, Fire2StartPoint.position, Fire2StartPoint.rotation);
 		Rigidbody2D rigidbody = newBullet.GetComponent<Rigidbody2D>();
 		rigidbody.AddForce(Fire2StartPoint.up * Force, ForceMode2D.Impulse);
